@@ -58,6 +58,32 @@ class TestAESGCM(unittest.TestCase):
                 self.nonce
             )
 
+    # Untuk menambahkan pengujian untuk kunci yang salah dan nonce yang salah
+    def test_wrong_key(self):
+        wrong_key = bytes(
+            [self.key[0] ^ 1]
+        ) + self.key[1:]
+
+        with self.assertRaises(InvalidTag):
+            decrypt_message(
+                self.ciphertext,
+                self.tag,
+                wrong_key,
+                self.nonce
+            )
+
+    def test_wrong_nonce(self):
+        wrong_nonce = bytes(
+            [self.nonce[0] ^ 1]
+        ) + self.nonce[1:]
+
+        with self.assertRaises(InvalidTag):
+            decrypt_message(
+                self.ciphertext,
+                self.tag,
+                self.key,
+                wrong_nonce
+            )
 
 if __name__ == "__main__":
     unittest.main()
